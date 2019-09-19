@@ -42,10 +42,26 @@ router.post('/login', (req, res) => {
 		});
 });
 
+router.get('/logout', (req, res) => {
+	console.log(req.token)
+	if (req.token) {
+		req.token.destroy(err => {
+			if (err) {
+				res.send('Error logging out')
+			} else {
+				res.send('Goodbye')
+			}
+		});
+	} else {
+		res.status(500).json({ message: 'Ooopsie, poopsie!' })
+	}
+});
+
 function generateToken(user) {
 	const payload = {
 		subject: user.id,
 		username: user.username,
+		department: user.department,
 	}
 	const options = {
 		expiresIn: '8h',
